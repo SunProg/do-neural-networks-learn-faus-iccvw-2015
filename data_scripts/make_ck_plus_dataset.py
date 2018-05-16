@@ -310,10 +310,11 @@ class CKPlusNumpyFileGenerator(object):
                              all_labels_path, all_facs_path, num_samples):
         # Initialize the data of interest
         image_shape = (96, 96, 1)
+        self.facs_len = 15
         X = numpy.zeros((num_samples, image_shape[2],
                          image_shape[0], image_shape[1]), dtype='uint8')
         y = numpy.zeros((num_samples), dtype='int32')
-        facs = numpy.zeros((num_samples, 10), dtype='int32')
+        facs = numpy.zeros((num_samples, self.facs_len), dtype='int32')
         all_subjs = numpy.zeros((num_samples), dtype='int32')
 
         total_sample_count = 0
@@ -333,14 +334,21 @@ class CKPlusNumpyFileGenerator(object):
                 label = self.read_label(all_labels_path, subj, seq)
                 label_vec = numpy.array([0, label, label, label])
 
-                facs = self.read_facs(all_facs_path, subj, seq)
-                facs_vec = numpy.array([0, facs, facs, facs])
+                facs_val = self.read_facs(all_facs_path, subj, seq)
+                facs_zeros = numpy.zeros((self.facs_len), dtype='int32')
+                facs_vec = numpy.array([facs_zeros, facs_val, facs_val, facs_val])
 
                 index_slice = slice(total_sample_count,
                                     total_sample_count+len(images))
                 X[index_slice] = images
-                y[index_slice] = label_vec
-                facs[index_slice] = facs_vec
+                try:
+                    y[index_slice] = label_vec
+                    facs[index_slice] = facs_vec
+                except:
+                    print 'index_slice', index_slice
+                    print 'subj : ',subj, 'seq : ', seq
+                    print 'label_vec : ', label_vec
+                
                 all_subjs[index_slice] = i
                 total_sample_count += len(images)
 
@@ -378,18 +386,16 @@ class CKPlusNumpyFileGenerator(object):
         f = open(os.path.join(facs_file_path, facs_file))
         facs_set = set()
         for line in f:
-            if line:
-                facs_label = map(int,line.split(' '))
-                facs_set.update(facs_label)
+            line = line.strip()
+            facs_label = map(int,map(float,line.split('   ')))
+            facs_set.update(facs_label)
         f.close()
         facs_list = list(facs_set)
-        facs = numpy.zeros(10)
+        facs = numpy.zeros(self.facs_len)
         facs[:len(facs_list)] = facs_list
         
         return facs
 
-
-        return label
     def make_folds(self, subjs, num_folds=10):
         print '\nMaking the folds.'
         folds = numpy.zeros((subjs.shape), dtype='int32')
