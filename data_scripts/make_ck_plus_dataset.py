@@ -331,7 +331,7 @@ class CKPlusNumpyFileGenerator(object):
                 label = self.read_label(all_labels_path, subj, seq)
                 label_vec = numpy.array([0, label, label, label])
 
-                facs = self.read_facs
+                facs = self.read_facs(all_facs_path, subj, seq)
 
                 index_slice = slice(total_sample_count,
                                     total_sample_count+len(images))
@@ -369,8 +369,19 @@ class CKPlusNumpyFileGenerator(object):
 
         return label
 
-    def read_facs(self, all_facs_path, subj, seq)
+    def read_facs(self, all_facs_path, subj, seq):
+        facs_file_path = os.path.join(all_facs_path, subj, seq)
+        facs_file = os.listdir(facs_file_path)[0]
+        f = open(os.path.join(facs_file_path, facs_file))
+        facs = []
+        for line in f:
+            facs_label = line.split(' ')
+            facs.append(facs_label)
+        f.close()
+        # print label
+        label = int(float(label))
 
+        return label
     def make_folds(self, subjs, num_folds=10):
         print '\nMaking the folds.'
         folds = numpy.zeros((subjs.shape), dtype='int32')
