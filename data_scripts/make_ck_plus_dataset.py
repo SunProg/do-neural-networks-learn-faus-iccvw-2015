@@ -25,6 +25,8 @@ class CKPlusCondenser(object):
                                        'cohn-kanade-images')
         self.label_path = os.path.join(condensed_dataset_path,
                                        'Emotion_labels')
+        self.facs_path = os.path.join(condensed_dataset_path,
+                                       'FACS_labels')
 
     def run(self):
         print '\nCondensing CK+ Dataset: '
@@ -285,6 +287,7 @@ class CKPlusNumpyFileGenerator(object):
 
         self.image_path = os.path.join(save_path, 'cohn-kanade-images')
         self.label_path = os.path.join(save_path, 'Emotion_labels')
+        self.facs_path = os.path.join(save_path, 'FACS_labels')
 
     def run(self):
         print '\nSaving CK+ images and labels to .npy files.'
@@ -293,20 +296,22 @@ class CKPlusNumpyFileGenerator(object):
         glob_image_path = os.path.join(self.image_path, '*/*/*.png')
         num_samples = len(glob.glob(glob_image_path))
 
-        X, y, subjs = self.make_data_label_mats(self.image_path,
+        X, y, facs, subjs = self.make_data_label_mats(self.image_path,
                                                 self.label_path,
+                                                self.facs_path,
                                                 num_samples)
         folds = self.make_folds(subjs)
 
         self.save_out_data(self.save_path, X, y, subjs, folds)
 
     def make_data_label_mats(self, all_images_path,
-                             all_labels_path, num_samples):
+                             all_labels_path, all_facs_path, num_samples):
         # Initialize the data of interest
         image_shape = (96, 96, 1)
         X = numpy.zeros((num_samples, image_shape[2],
                          image_shape[0], image_shape[1]), dtype='uint8')
         y = numpy.zeros((num_samples), dtype='int32')
+        facs = numpy.zeros((num_samples), dtype='int32')
         all_subjs = numpy.zeros((num_samples), dtype='int32')
 
         total_sample_count = 0
@@ -326,14 +331,17 @@ class CKPlusNumpyFileGenerator(object):
                 label = self.read_label(all_labels_path, subj, seq)
                 label_vec = numpy.array([0, label, label, label])
 
+                facs = self.read_facs
+
                 index_slice = slice(total_sample_count,
                                     total_sample_count+len(images))
                 X[index_slice] = images
                 y[index_slice] = label_vec
+                facs[index_slice] = facs_vec
                 all_subjs[index_slice] = i
                 total_sample_count += len(images)
 
-        return X, y, all_subjs
+        return X, y, facs, all_subjs
 
     def read_images(self, all_images_path, subj, seq, image_shape):
         image_file_path = os.path.join(all_images_path, subj, seq)
@@ -360,6 +368,8 @@ class CKPlusNumpyFileGenerator(object):
         label = int(float(label))
 
         return label
+
+    def read_facs(self, all_facs_path, subj, seq)
 
     def make_folds(self, subjs, num_folds=10):
         print '\nMaking the folds.'
