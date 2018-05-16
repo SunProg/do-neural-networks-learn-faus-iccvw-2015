@@ -160,6 +160,8 @@ class CKPlusCondenser(object):
         num_seq_per_subj = []
         num_files_per_subj = []
         for folder in subj_folder_list:
+            if folder == '.DS_Store':
+                continue
             seq_list = os.listdir(os.path.join(path, folder))
             seq_list = [s for s in seq_list if s != '.DS_Store']
             num_sequences = len(seq_list)
@@ -302,7 +304,7 @@ class CKPlusNumpyFileGenerator(object):
                                                 num_samples)
         folds = self.make_folds(subjs)
 
-        self.save_out_data(self.save_path, X, y, subjs, folds)
+        self.save_out_data(self.save_path, X, y, facs, subjs, folds)
 
     def make_data_label_mats(self, all_images_path,
                              all_labels_path, all_facs_path, num_samples):
@@ -311,7 +313,7 @@ class CKPlusNumpyFileGenerator(object):
         X = numpy.zeros((num_samples, image_shape[2],
                          image_shape[0], image_shape[1]), dtype='uint8')
         y = numpy.zeros((num_samples), dtype='int32')
-        facs = numpy.zeros((num_samples), dtype='int32')
+        facs = numpy.zeros((num_samples, 10), dtype='int32')
         all_subjs = numpy.zeros((num_samples), dtype='int32')
 
         total_sample_count = 0
@@ -332,6 +334,7 @@ class CKPlusNumpyFileGenerator(object):
                 label_vec = numpy.array([0, label, label, label])
 
                 facs = self.read_facs(all_facs_path, subj, seq)
+                facs_vec = numpy.array([0, facs, facs, facs])
 
                 index_slice = slice(total_sample_count,
                                     total_sample_count+len(images))
@@ -373,13 +376,18 @@ class CKPlusNumpyFileGenerator(object):
         facs_file_path = os.path.join(all_facs_path, subj, seq)
         facs_file = os.listdir(facs_file_path)[0]
         f = open(os.path.join(facs_file_path, facs_file))
-        facs = []
+        facs_set = set()
         for line in f:
-            facs_label = line.split(' ')
-            facs.append(facs_label)
+            if line:
+                facs_label = map(int,line.split(' '))
+                facs_set.update(facs_label)
         f.close()
-        # print label
-        label = int(float(label))
+        facs_list = list(facs_set)
+        facs = numpy.zeros(10)
+        facs[:len(facs_list)] = facs_list
+        
+        return facs
+
 
         return label
     def make_folds(self, subjs, num_folds=10):
@@ -400,12 +408,13 @@ class CKPlusNumpyFileGenerator(object):
 
         return folds
 
-    def save_out_data(self, path, X, y, subjs, folds):
+    def save_out_data(self, path, X, y, facs, subjs, folds):
         if not os.path.exists(path):
             os.makedirs(path)
 
         numpy.save(os.path.join(path, 'X.npy'), X)
         numpy.save(os.path.join(path, 'y.npy'), y)
+        numpy.save(os.path.join(path, 'facs.npy'), facs)
         numpy.save(os.path.join(path, 'subjs.npy'), subjs)
         numpy.save(os.path.join(path, 'folds.npy'), folds)
 
