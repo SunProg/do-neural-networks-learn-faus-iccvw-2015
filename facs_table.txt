@@ -1,0 +1,31 @@
+0 no action
+1 Inner Brow Raiser
+2 Outer Brow Raiser
+4 Brow Lowerer
+5 Upper Lip Raiser
+6 Cheek Raiser
+7 Lid Tightener
+9 Nose Wrinkler
+10 Upper Lip Raiser
+11 Nasolabial Deepener
+12 Lip Corner Puller
+13 Cheek Puller
+14 Dimpler
+15 Lip Corner Depressor
+16 Lower Lip Depressor
+17 Chin Raiser
+18 Lip Puckerer
+20 Lip Stretcher
+21 Neck Tightener
+23 Lip Tightener
+24 Lip Pressor
+25 Lips Part
+26 Jaw Drop
+27 Mouth Stretch
+28 Lip Suck
+29 Jaw Thrust
+31 Jaw Clencher
+34 Cheek Puff
+38 Nostril Dilator
+39 Nostril Compressor
+43 Eyes Closed
