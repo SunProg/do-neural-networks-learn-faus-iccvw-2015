@@ -84,7 +84,7 @@ def make_cv_folds(X, y, folds, fold_num):
 if __name__ == '__main__':
     # Data loading
     dataset_path = 'save_data/npy_files'
-
+    result_path = 'result/'
     X = np.load(os.path.join(dataset_path,'X.npy'))
     y = np.load(os.path.join(dataset_path,'y.npy'))
     folds = np.load(os.path.join(dataset_path,'folds.npy'))
@@ -98,10 +98,13 @@ if __name__ == '__main__':
     
     
 
-    
+    hist = []
     # CV Training
     for times in range(10):
+        result_path_times = os.path.join(result_path, str(times))
+        hist_folds = []
         for val_fold in range(10):
+            result_path_folds = os.path.join(result_path_times, str(val_fold))
             X_train, y_train, X_valid, y_valid = make_cv_folds(X, y, folds, val_fold)
             
             print('X_train shape :', X_train.shape)
@@ -114,13 +117,17 @@ if __name__ == '__main__':
             print(X_valid.shape[0], 'validation samples')
             #X_test = X_test.astype('float32')/255
             model = make_model()
-            filepath="result/{times:02d}/weights-improvement-{val_fold:02d}-{val_acc:.2f}.hdf5"
-            checkpointer = ModelCheckpoint(filepath='model.weights.best.hdf5',
+            filepath="weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+            filepath = os.path.join(result_path_folds,filepath)
+            checkpointer = ModelCheckpoint(filepath=filepath,
                                     monitor='val_acc',
                                     verbose=1, save_best_only=True)
 
-            hist = model.fit(X_train, y_train, batch_size=64, epochs=50,
+            hist_folds.append( model.fit(X_train, y_train, batch_size=64, epochs=50,
                         validation_data=(X_valid, y_valid),
-                        callbacks=[checkpointer], verbose=2, shuffle=True)
+                        callbacks=[checkpointer], verbose=2, shuffle=True) )
+        hist.append(hist_folds)
+    
+    
   
         
