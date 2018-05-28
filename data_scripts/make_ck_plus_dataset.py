@@ -310,7 +310,7 @@ class CKPlusNumpyFileGenerator(object):
                              all_labels_path, all_facs_path, num_samples):
         # Initialize the data of interest
         image_shape = (96, 96, 1)
-        self.facs_len = 15
+        self.facs_len = 10
         X = numpy.zeros((num_samples, image_shape[2],
                          image_shape[0], image_shape[1]), dtype='uint8')
         y = numpy.zeros((num_samples), dtype='int32')
@@ -387,8 +387,9 @@ class CKPlusNumpyFileGenerator(object):
         facs_set = set()
         for line in f:
             line = line.strip()
-            facs_label = map(int,map(float,line.split('   ')))
-            facs_set.update(facs_label)
+            line = line.split('   ')[0]
+            facs_label = int(float(line))
+            facs_set.add(facs_label)
         f.close()
         facs_list = list(facs_set)
         facs = numpy.zeros(self.facs_len)
