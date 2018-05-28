@@ -1,4 +1,4 @@
-0 no action
+0 Neutral Face
 1 Inner Brow Raiser
 2 Outer Brow Raiser
 4 Brow Lowerer
@@ -17,6 +17,7 @@
 18 Lip Puckerer
 20 Lip Stretcher
 21 Neck Tightener
+22 Lip funneler
 23 Lip Tightener
 24 Lip Pressor
 25 Lips Part
@@ -24,8 +25,45 @@
 27 Mouth Stretch
 28 Lip Suck
 29 Jaw Thrust
+30 Jaw sideways
 31 Jaw Clencher
+32 Lip bite
+33 Cheek blow
 34 Cheek Puff
+35 Cheek suck
+36 Tongue bulge
+37 Lip wipe
 38 Nostril Dilator
 39 Nostril Compressor
+40 Sniff
+41 Lid droop
+42 Slit
 43 Eyes Closed
+44 Squint
+45 Blink
+46 Wink
+50 Speech
+51 Head turn left
+52 Head turn left
+53 Head up
+54 Head down
+55 Head tilt left
+56 Head tilt right
+57 Head forward	
+58 Head back
+61 Eyes turn left
+62 Eyes turn right
+63 Eyes up
+64 Eyes down
+65 Walleye
+66 Cross-eye
+69 Eyes positioned to look at other person
+80 Swallow
+81 Chewing
+82 Shoulder shrug
+84 Head shake back and forth
+85 Head nod up and down
+91 Flash
+92 Partial flash
+97 Shiver/tremble
+98 Fast up-down look
