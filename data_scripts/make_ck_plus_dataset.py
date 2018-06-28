@@ -310,7 +310,7 @@ class CKPlusNumpyFileGenerator(object):
                              all_labels_path, all_facs_path, num_samples):
         # Initialize the data of interest
         image_shape = (96, 96, 1)
-        self.facs_len = 10
+        self.facs_len = 15
         X = numpy.zeros((num_samples, image_shape[2],
                          image_shape[0], image_shape[1]), dtype='uint8')
         y = numpy.zeros((num_samples), dtype='int32')
