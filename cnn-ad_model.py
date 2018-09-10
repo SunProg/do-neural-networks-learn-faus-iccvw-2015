@@ -100,6 +100,7 @@ if __name__ == '__main__':
 
         X_train, X_valid = X[train_index], X[test_index]
         y_train, y_valid = y[train_index], y[test_index]
+        import pdb; pdb.set_trace()  # XXX BREAKPOINT
         # print shape of training set
         print('x_train shape :', X_train.shape)
         
